@@ -4,8 +4,8 @@ function [V_upper_res, u_res_height] = fcn_vol_upper(V_upper_res, q, density, re
 
     if q >= 0
         V_upper_res = V_upper_res - (q/density);
-        if V_upper_res == 0
-            pause
+        if V_upper_res <= 0
+            V_upper_res = V_upper_res + (q/density);
         end
     else
         V_upper_res = V_upper_res + (q/density);
