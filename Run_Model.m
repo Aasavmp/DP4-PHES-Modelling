@@ -13,7 +13,7 @@ grid_frq = 50;
 
 %% Upper Res
 % Initial Res. Volume
-V_init = 27; % m^3
+V_init_u_res = 27; % m^3
 
 % Res. Width
 u_res_width = 3; % m
@@ -23,6 +23,12 @@ u_res_length = 3; % m
 
 % Res. Altitude (at base)
 u_res_alt = 200; % m above sea level
+
+% Min. Res. Volume allowed
+min_u_res_vol = 3;
+
+% Max. Res. Vol. Allowed
+max_u_res_vol = 27;
 
 %% Penstock 1
 % Diameter of Penstock Pipe
@@ -35,10 +41,13 @@ penstock_length_1 = 20; % m
 penstock_roughness = 1e-5; % m
 
 % Valve Loss Factor (during generation)
-valve_loss_factor_gen = 1; 
+add_loss_factor_gen = 1; 
 
 % Valve Loss Factor (during pumping)
-valve_loss_factor_pump = 1;
+add_loss_factor_pump = 1;
+
+% Fluid Viscosity
+fluid_viscosity = 1e-3; % Pa s
 
 %% Turbine
 % Inlet Guide Vane Angle
@@ -75,6 +84,9 @@ K_2 = 0;
 K_3 = 0;
 
 %% Lower Res
+% Initial Res. Volume
+V_init_l_res = 3;
+
 % Res. Width
 l_res_width = 3; % m
 
@@ -84,10 +96,17 @@ l_res_length = 3; % m
 % Res. Altitude (as base)
 l_res_alt = 100; % m (above sea level)
 
+% Min. Res. Volume allowed
+min_l_res_vol = 3;
+
+% Max. Res. Vol. Allowed
+max_l_res_vol = 27;
+
+
 %% Pump
 % Power of Pump at base
-pump_power_start_1 = 0;
+pump_power_start_1 = 1.005e+06;
 
 %% Run Sim
-sim("PHES_Model.slx")
+% sim("PHES_Model_v1.slx")
 
