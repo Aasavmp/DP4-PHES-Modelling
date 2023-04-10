@@ -13,29 +13,29 @@ grid_frq = 50;
 
 %% Upper Res
 % Initial Res. Volume
-V_init_u_res = 6000; % m^3
+V_init_u_res = 2600; % m^3
 
 % Res. Width
-u_res_width = 20; % m
+u_res_width = 13; % m
 
 % Res. Length
 u_res_length = 60; % m
 
 % Res. Altitude (at base)
-u_res_alt = 200; % m above sea level
+u_res_alt = 202.3; % m above sea level
 
 % Min. Res. Volume allowed
-min_u_res_vol = 3;
+min_u_res_vol = 20;
 
 % Max. Res. Vol. Allowed
-max_u_res_vol = 6000;
+max_u_res_vol = 2600;
 
 %% Penstock 1
 % Diameter of Penstock Pipe
-penstock_diameter_1 = 0.2; % m
+penstock_diameter_1 = 0.8; % m
 
 % Length of Penstock
-penstock_length_1 = 20; % m
+penstock_length_1 = 380; % m
 
 % Penstock Roughness
 penstock_roughness = 1e-5; % m
@@ -51,7 +51,7 @@ fluid_viscosity = 1e-3; % Pa s
 
 %% Turbine
 % Inlet Guide Vane Angle
-alpha_1 = 45; % deg
+alpha_1 = 12; % deg
 
 % Inlet Radius of Runner
 R_1 = 1; % m
@@ -60,7 +60,7 @@ R_1 = 1; % m
 R_2 = 0.5; % m
 
 % Inlet Cross-sectional Area
-A_1 = pi() * R_1^2; % m^2
+A_1 = (pi() * penstock_diameter_1^2) / 4; % m^2
 
 % Outlet Cross-sectional Area
 A_2 = pi() * R_2^2; % m^2
@@ -83,30 +83,33 @@ K_2 = 0;
 % Friction Loss Factor
 K_3 = 0;
 
+% Turbine Efficiency for simple model
+turbine_efficiency = 0.9;
+
 %% Lower Res
 % Initial Res. Volume
-V_init_l_res = 3;
+V_init_l_res = 20;
 
 % Res. Width
-l_res_width = 20; % m
+l_res_width = 13; % m
 
 % Res. Length
 l_res_length = 60; % m
 
 % Res. Altitude (as base)
-l_res_alt = 100; % m (above sea level)
+l_res_alt = 126.3; % m (above sea level)
 
 % Min. Res. Volume allowed
-min_l_res_vol = 3;
+min_l_res_vol = 20;
 
 % Max. Res. Vol. Allowed
-max_l_res_vol = 6000;
+max_l_res_vol = 2600;
 
 
 %% Pump
 % Power of Pump at base
-pump_power_start_1 = 1.005e+06;
+pump_power_start_1 = 1027000;
 
 %% Run Sim
-sim("PHES_Model_v1.slx")
+% sim("PHES_Model_v1.slx")
 

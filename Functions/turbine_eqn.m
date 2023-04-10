@@ -1,5 +1,9 @@
 function [useful_torque, useful_work, shock_loss, whirl_loss, friction_loss, total_work] = turbine_eqn(q, density, alpha_1, R_1, R_2, A_1, A_2, beta_1, beta_2, omega, K_1, K_2, K_3)
 
+    alpha_1 = deg2rad(alpha_1);
+    beta_1 = deg2rad(beta_1);
+    beta_2 = deg2rad(beta_2);
+    
     useful_torque = q*((R_1*(q/(density*A_1))*cot(alpha_1)) - R_2*((omega*R_2)+((q/(density*A_2))*cot(beta_2))));
 
     useful_work = useful_torque * omega;
