@@ -13,13 +13,13 @@ grid_frq = 50;
 
 %% Upper Res
 % Initial Res. Volume
-V_init_u_res = 27; % m^3
+V_init_u_res = 6000; % m^3
 
 % Res. Width
-u_res_width = 3; % m
+u_res_width = 20; % m
 
 % Res. Length
-u_res_length = 3; % m
+u_res_length = 60; % m
 
 % Res. Altitude (at base)
 u_res_alt = 200; % m above sea level
@@ -28,11 +28,11 @@ u_res_alt = 200; % m above sea level
 min_u_res_vol = 3;
 
 % Max. Res. Vol. Allowed
-max_u_res_vol = 27;
+max_u_res_vol = 6000;
 
 %% Penstock 1
 % Diameter of Penstock Pipe
-penstock_diameter_1 = 1; % m
+penstock_diameter_1 = 0.2; % m
 
 % Length of Penstock
 penstock_length_1 = 20; % m
@@ -88,10 +88,10 @@ K_3 = 0;
 V_init_l_res = 3;
 
 % Res. Width
-l_res_width = 3; % m
+l_res_width = 20; % m
 
 % Res. Length
-l_res_length = 3; % m
+l_res_length = 60; % m
 
 % Res. Altitude (as base)
 l_res_alt = 100; % m (above sea level)
@@ -100,7 +100,7 @@ l_res_alt = 100; % m (above sea level)
 min_l_res_vol = 3;
 
 % Max. Res. Vol. Allowed
-max_l_res_vol = 27;
+max_l_res_vol = 6000;
 
 
 %% Pump
@@ -108,5 +108,5 @@ max_l_res_vol = 27;
 pump_power_start_1 = 1.005e+06;
 
 %% Run Sim
-% sim("PHES_Model_v1.slx")
+sim("PHES_Model_v1.slx")
 

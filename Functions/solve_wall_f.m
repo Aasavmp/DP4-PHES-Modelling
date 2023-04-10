@@ -11,8 +11,8 @@ function f = solve_wall_f(q, penstock_diameter, penstock_roughness, density, flu
     y = @(x) 1/sqrt(x) + 2*log(((penstock_roughness/penstock_diameter)/3.7) + (2.51/(Re*sqrt(x))));
 
     % Set the interval [a, b] and the tolerance (epsilon)
-    a = 0.000000001; % Example value
-    b = 100; % Example value
+    a = 0.000000000001; % Example value
+    b = 1000000000000; % Example value
     epsilon = 1e-10; % Example value
     
     % Check that the function changes sign on the interval [a, b]
