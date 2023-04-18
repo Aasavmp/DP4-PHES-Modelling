@@ -1,4 +1,4 @@
-function q = fcn_penstock_steadystate(pressure_gain, penstock_diameter, penstock_length, density, penstock_roughness, add_loss_factor, q, fluid_viscosity)
+function q = fcn_penstock_steadystate(pressure_gain, penstock_diameter, penstock_length, density, penstock_roughness, add_loss_factor, fluid_viscosity)
 
     penstock_area = (pi() * penstock_diameter^2) / 4;
 
@@ -8,9 +8,12 @@ function q = fcn_penstock_steadystate(pressure_gain, penstock_diameter, penstock
 
     iter = 1;
 
+    b_useHaaland = 0;
+
     while q_diff > q_res
         % Solve wall friction first 
-        C_f = solve_wall_f(q_0, penstock_diameter, penstock_roughness, density, fluid_viscosity)/(2*penstock_diameter*density);
+        f = solve_wall_f(q_0, penstock_diameter, penstock_roughness, density, fluid_viscosity, b_useHaaland);
+        C_f = f/(2*penstock_diameter*density);
 
         % Solve for q
         q_squared = ((penstock_area^2)/((C_f*penstock_length)+(add_loss_factor/(2*density))))*(pressure_gain);

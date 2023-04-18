@@ -1,4 +1,4 @@
-function f = solve_wall_f(q, penstock_diameter, penstock_roughness, density, fluid_viscosity)
+function f = solve_wall_f(q, penstock_diameter, penstock_roughness, density, fluid_viscosity, b_useHaaland)
 % Function to solve the wall friction factor
 
     % Get velocity from q
@@ -10,9 +10,14 @@ function f = solve_wall_f(q, penstock_diameter, penstock_roughness, density, flu
     % function needed to be solved
     y = @(x) 1/sqrt(x) + 2*log(((penstock_roughness/penstock_diameter)/3.7) + (2.51/(Re*sqrt(x))));
 
+    % Alternative friction
+    if b_useHaaland
+        y = @(x) 1/sqrt(x) + 3.6*log(((penstock_roughness/penstock_diameter)/3.71)^1.11 + (6.9/(Re)));
+    end
+
     % Set the interval [a, b] and the tolerance (epsilon)
-    a = 0.000000000001; % Example value
-    b = 1000000000000; % Example value
+    a = 0.000001; % Example value
+    b = 1000000; % Example value
     epsilon = 1e-10; % Example value
     
     % Check that the function changes sign on the interval [a, b]

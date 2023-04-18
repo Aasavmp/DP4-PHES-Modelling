@@ -41,13 +41,20 @@ penstock_length_1 = 380; % m
 penstock_roughness = 1e-5; % m
 
 % Valve Loss Factor (during generation)
-add_loss_factor_gen = 1; 
+pipe_entry_loss = 0.18;
+gate_valve_loss_factor = 0.2; % Fully open: 0.2, Three-Quarters Open: 1.15, Half open: 5.6, Quarter open: 24
+fortyfive_bend_loss = 0.4;
+bottom_junction_loss = 1.8;
+add_loss_factor_gen = pipe_entry_loss + gate_valve_loss_factor + 2*fortyfive_bend_loss + bottom_junction_loss; 
 
 % Valve Loss Factor (during pumping)
-add_loss_factor_pump = 1;
+add_loss_factor_pump = 2*fortyfive_bend_loss + gate_valve_loss_factor;
 
 % Fluid Viscosity
 fluid_viscosity = 1e-3; % Pa s
+
+% Fluid height in pipe
+fluid_h_inPen = 0.6;
 
 %% Turbine
 % Inlet Guide Vane Angle
