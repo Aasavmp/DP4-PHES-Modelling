@@ -16,8 +16,8 @@ function f = solve_wall_f(q, penstock_diameter, penstock_roughness, density, flu
     end
 
     % Set the interval [a, b] and the tolerance (epsilon)
-    a = 0.000001; % Example value
-    b = 1000000; % Example value
+    a = 0.0000000001; % Example value
+    b = 100000000000; % Example value
     epsilon = 1e-10; % Example value
     
     % Check that the function changes sign on the interval [a, b]

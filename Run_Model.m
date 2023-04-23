@@ -3,7 +3,8 @@ clc
 
 %% Global
 % Fluid Density
-density = 997; % kg/m^3
+% density = 997; % kg/m^3
+density = 2500;
 
 % Gravitational Accel.
 g = 9.81; % m/s^2
@@ -46,6 +47,7 @@ gate_valve_loss_factor = 0.2; % Fully open: 0.2, Three-Quarters Open: 1.15, Half
 fortyfive_bend_loss = 0.4;
 bottom_junction_loss = 1.8;
 add_loss_factor_gen = pipe_entry_loss + gate_valve_loss_factor + 2*fortyfive_bend_loss + bottom_junction_loss; 
+% add_loss_factor_gen = 0;
 
 % Valve Loss Factor (during pumping)
 add_loss_factor_pump = 2*fortyfive_bend_loss + gate_valve_loss_factor;
@@ -54,7 +56,10 @@ add_loss_factor_pump = 2*fortyfive_bend_loss + gate_valve_loss_factor;
 fluid_viscosity = 1e-3; % Pa s
 
 % Fluid height in pipe
-fluid_h_inPen = 0.6;
+fluid_h_inPen = 0.75.*penstock_diameter_1;
+
+% Friction Factor override leave empty if no override wanted
+friction_factor = 0;
 
 %% Turbine
 % Inlet Guide Vane Angle
@@ -91,7 +96,7 @@ K_2 = 0;
 K_3 = 0;
 
 % Turbine Efficiency for simple model
-turbine_efficiency = 0.9;
+turbine_efficiency = 1;
 
 %% Lower Res
 % Initial Res. Volume
@@ -118,5 +123,5 @@ max_l_res_vol = 2600;
 pump_power_start_1 = 1027000;
 
 %% Run Sim
-% sim("PHES_Model_v1.slx")
+sim_output = sim("PHES_Model_v1.slx");
 
