@@ -60,26 +60,28 @@ add_loss_factor_gen = pipe_entry_loss + gate_valve_loss_factor + 2*fortyfive_ben
 add_loss_factor_pump = 2*fortyfive_bend_loss + gate_valve_loss_factor;
 
 % Fluid Viscosity
-fluid_viscosity = 1e-3; % Pa s
+% fluid_viscosity = 1e-3; % Pa s
+fluid_viscosity = 5.6e-4;
 
 % Fluid height in pipe
-fluid_h_inPen = 0.75 .* penstock_diameter_1;
+fluid_h_inPen = penstock_diameter_1;
 
 % Friction Factor override leave empty if no override wanted
 friction_factor = 0;
 
 %% Turbine
 % Inlet Guide Vane Angle
-alpha_1 = 12; % deg
+alpha_1 = 45; % deg
 
 % Inlet Radius of Runner
-R_1 = 1; % m
+R_1 = 0.54; % m
 
 % Outlet Radius of Runner
-R_2 = 0.5; % m
+R_2 = 0.3; % m
 
 % Inlet Cross-sectional Area
 A_1 = (pi() * penstock_diameter_1^2) / 4; % m^2
+A_1 = 0.006;
 
 % Outlet Cross-sectional Area
 A_2 = pi() * R_2^2; % m^2
@@ -88,10 +90,10 @@ A_2 = pi() * R_2^2; % m^2
 beta_1 = 60; % deg
 
 % Outlet Blade Angle wrt inner rotor perpendicular direction of vel.
-beta_2 = 150; % deg
+beta_2 = 56; % deg
 
 % Rotational Speed required
-omega = 2*pi()*grid_frq; % rad/s
+omega = 2*pi()*grid_frq/20; % rad/s
 
 % Shock Loss Factor
 K_1 = 0;
@@ -100,11 +102,11 @@ K_1 = 0;
 K_2 = 0;
 
 % Friction Loss Factor
-K_3 = 0;
+K_3 =1;
 
 % Turbine Efficiency for simple model
-turbine_efficiency = 0.69;
-% turbine_efficiency = 1;
+% turbine_efficiency = 0.69;
+turbine_efficiency = 1;
 
 %% Lower Res
 % Initial Res. Volume
@@ -225,19 +227,31 @@ if b_sens_study
     mass_flow_rate = {};
     volume_flow_rate = {};
     height_difference = {};
+    useful_work = {};
 %     c_height_diff = 0:1:100;
     counter = 1;
-    c_prop_array = 0.95e-3:0.005e-3:1.05e-3;
-    for i = 1
-%         friction_factor = i;
+    c_altprop_array = 0;
+%     c_prop_array = 0:50:300;
+    c_prop_array =0:10:90;
+    for i = c_altprop_array
+        friction_factor = 0;
+%         beta_2 = i
         number = 1;
         for i_prop = c_prop_array
-            fluid_viscosity = i_prop
+%             R_1 = i_prop
+%             density = i_prop
+            alpha_1 = i_prop
+%             if friction_factor ~= 0
+%                 fluid_h_inPen = 0.75 .* penstock_diameter_1;
+%                 add_loss_factor_gen = 0;
+%             end
             sim_output = sim("PHES_Model_v1.slx");
             power_output{counter, number} = sim_output.power_output_kW.Data;
             mass_flow_rate{counter, number} = sim_output.mass_flow_rate.Data;
             volume_flow_rate{counter, number} = sim_output.volume_flow_rate.Data;
             height_difference{counter, number} = sim_output.height_difference.Data;
+            useful_work{counter, number} = sim_output.turbine_output.Data;
+            efficiency_output{counter, number} = sim_output.efficiency.Data; 
             number = number+1;
         end
         counter = counter + 1;
@@ -245,53 +259,94 @@ if b_sens_study
 
 %     power_output_reduced = cellfun(@(c) c(c~=0), power_output, 'UniformOutput',0);
     iRow = 1;
-    for i_prop = 1:length(c_prop_array)
-        d_power_output(:,i_prop) = power_output{iRow, i_prop}(2:end);
-        avg_power_output(1,i_prop) = mean(d_power_output(:,i_prop));
-        max_power_output(1,i_prop) = abs(max(d_power_output(:,i_prop))-avg_power_output(1,i_prop));
-        min_power_output(1,i_prop) = abs(min(d_power_output(:,i_prop))-avg_power_output(1,i_prop));
-        d_mass_flow_rate(:,i_prop) = mass_flow_rate{iRow, i_prop}(2:end);
-        avg_mass_flow_rate(:,i_prop) = mean(d_mass_flow_rate(:,i_prop));
-        d_volume_flow_rate(:,i_prop) = volume_flow_rate{iRow, i_prop}(2:end);
-        avg_volume_flow_rate(:, i_prop) = mean(d_volume_flow_rate(:,i_prop));
-        d_height_diff(:,i_prop) = height_difference{iRow, i_prop}(2:end);
-        avg_height_diff(:, i_prop) = mean(d_height_diff(:,i_prop));
-%         inclination_angle(:, i_prop) = asin(avg_height_diff(:, i_prop)/c_prop_array(i_prop)) .* (180/pi());
+    for i_altprop = 1:length(c_altprop_array)
+        for i_prop = 1:length(c_prop_array)
+            d_power_output(:,i_prop) = power_output{i_altprop, i_prop}(2:end);
+            avg_power_output(1,i_prop) = mean(d_power_output(:,i_prop));
+            max_power_output(1,i_prop) = abs(max(d_power_output(:,i_prop))-avg_power_output(1,i_prop));
+            min_power_output(1,i_prop) = abs(min(d_power_output(:,i_prop))-avg_power_output(1,i_prop));
+            d_mass_flow_rate(:,i_prop) = mass_flow_rate{iRow, i_prop}(2:end);
+            avg_mass_flow_rate(:,i_prop) = mean(d_mass_flow_rate(:,i_prop));
+            d_volume_flow_rate(:,i_prop) = volume_flow_rate{iRow, i_prop}(2:end);
+            avg_volume_flow_rate(:, i_prop) = mean(d_volume_flow_rate(:,i_prop));
+            d_height_diff(:,i_prop) = height_difference{iRow, i_prop}(2:end);
+            avg_height_diff(:, i_prop) = mean(d_height_diff(:,i_prop));
+            d_turbine_power(:,i_prop) = useful_work{i_altprop, i_prop};
+            avg_turbine_power(1, i_prop) = mean(d_turbine_power(:, i_prop));
+            d_effy(:,i_prop) = efficiency_output{i_altprop, i_prop};
+            avg_effy(1, i_prop) = mean([d_effy(~isnan(d_effy(:,i_prop)),i_prop)]);
+    %         inclination_angle(:, i_prop) = asin(avg_height_diff(:, i_prop)/penstock_length_1) .* (180/pi());
+            
+%             hold on
+%             scatter3(c_altprop_array(i_altprop), c_prop_array(i_prop),avg_turbine_power(i_prop))
+        end
+    end
+
+    d_avg_turbine_power = [];
+    for width = 1:size(useful_work, 1)
+        for length = 1:size(useful_work, 2)
+            d_avg_turbine_power(width, length) = mean(useful_work{width, length});
+        end
     end
 
     sensitivity = 0;
-    for i_sens = 2:length(c_prop_array)
-        sensitivity(end + 1) = (avg_power_output(i_sens)-avg_power_output(i_sens-1))/(c_prop_array(i_sens)-c_prop_array(i_sens-1));
+    for i_sens = 2:size(c_prop_array,2)
+        sensitivity(end + 1) = (d_avg_turbine_power(i_sens)-d_avg_turbine_power(i_sens-1))/(c_prop_array(i_sens)-c_prop_array(i_sens-1));
     end
 
+    [vol_diff, f_loc_V] = min(abs(avg_volume_flow_rate-0.39));
+    [P_diff, f_loc_P] = min(abs(avg_power_output-505));
 %     save('Sensitivity', "sensitivity")
 %     save('Power Output kW', "d_power_output")
 %     save('Penstock Length', "c_prop_array")
 %     save('Height Diff', "d_height_diff")
 %     save('Inclination Angle', "inclination_angle")
+%     .*[linspace(1,1.4,10)]-90
+%     c_prop_array = c_prop_array.*500;
+%      plot(c_prop_array, d_avg_turbine_power)
+    c_prop_array = (c_prop_array./c_prop_array(end));
+    hold on
+    plot(c_prop_array, avg_effy.*100)
+    plot(c_prop_array, avg_power_output)
 
+    legend('Fluid Density (500 - 3500 [kg/m\(^3\)])', 'Head/Height Difference (0 - 120 [m])', 'Penstock Length (150 - 500 [m])', 'Guide Vane Angle (0 - 90 [\(^o\)])')
+    xlabel('Normalised Parameters [-]')
+    ylabel('Efficiency (\(\eta\)) [\(\%\)]')
      % Validated against P=pQHgn
-    estimated_power_out = 0.39 .* g .* turbine_efficiency .* density .* c_prop_array .*1e-3;
+    estimated_power_out = 0.39 .* g .* turbine_efficiency .* 75 .* c_prop_array .*1e-3;
 %     output_error = -100.*(estimated_power_out - avg_power_output)./estimated_power_out;
 %     plot(c_prop_array, avg_power_output + max_power_output)
 %     errorbar(c_prop_array, avg_power_output, min_power_output, max_power_output)
     hold on
-    plot(c_prop_array.*1000, smooth(avg_power_output))
+    plot(c_prop_array, smooth(avg_turbine_power))
     ylabel('Power Output [kW]')
-%     yyaxis right
-%     plot(c_prop_array, smooth(estimated_power_out))
-    xlabel('Penstock Diameter [mm]')
     yyaxis right
-    plot(c_prop_array.*1000, sensitivity./1000)
-    ylabel('Sensitivity [kW/mm)]')
-    legend('Average Power Output', 'Power Sensitivity')
-%     xlim([])
+    plot(c_prop_array, avg_volume_flow_rate)
+    yline(0.39, Label='0.39 m\(^3)/s')
+    ylabel('Volume Flow Rate [m\(^3\)/s]')
+    xlabel('Fluid Density (\(\rho\)) [kg/m\(^3\)]')
+%     plot(c_prop_array, estimated_power_out)
+%     yyaxis right
+    plot(c_prop_array, smooth(estimated_power_out))
+    xlabel('Penstock Roughness (\(\epsilon\)) [mm]')
+%     ylim([300 600])
+%     yline(505, Label='505 kW')
+    yyaxis left
+%     plot(c_prop_array, avg_volume_flow_rate)
+    plot(c_prop_array, sensitivity)
+    ylabel('Sensitivity [kW/kg/m\(^3\)]')
+%     ylim([0.3 0.5])
+%     yline(0.39, Label='0.39 m^3/s')
+    legend('Average Power Output (Model 1, \(\eta = 69\%\))','Average Power Output (Model 2, \(\eta = 69\%\))','Average Power Output (Model 3)', 'Governing Power Output (\(\eta = 69\%\))', 'Governing Power Output (\(\eta = 100\%\))', 'Power Sensitivity (Model 3)')
+    xline(56, Label='Chosen Relative Flow Angle \(\beta_2 = 56^o\)', Interpreter='latex')
+    xlim([0, 1500])
 %     plot(c_prop_array, avg_power_output - min_power_output)
     plot(c_prop_array, estimated_power_out)
 %     errorbar(inclination_angle, avg_power_output, zeros(1, length(min_power_output)), max_power_output)
 %     plot(c_prop_array, estimated_power_out)
-    xlabel('Density [kg/m\(^3\)]')
-    ylabel('Power Output [kW]')
+%     xlabel('Density [kg/m\(^3\)]')
+%     ylabel('Power Output [kW]')
+
 
 %     percent_error = ((avg_power_output-estimated_power_out)./avg_power_output);
 %     yyaxis('right')

@@ -4,7 +4,9 @@ function [useful_torque, useful_work, shock_loss, whirl_loss, friction_loss, tot
     beta_1 = deg2rad(beta_1);
     beta_2 = deg2rad(beta_2);
     
-    useful_torque = q*((R_1*(q/(density*A_1))*cot(alpha_1)) - R_2*((omega*R_2)+((q/(density*A_2))*cot(beta_2))));
+%     useful_torque = q*((R_1*(q/(density*A_1))*cot(alpha_1)) - R_2*((omega*R_2)+((q/(density*A_2))*cot(beta_2))));
+
+    useful_torque = q*(((q/density)*(((R_1*cot(alpha_1))/A_1)+((R_2*cot(beta_2))/A_2))) - (omega*R_2^2));
 
     useful_work = useful_torque * omega;
 

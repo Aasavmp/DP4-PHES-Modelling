@@ -22,6 +22,7 @@ function q = fcn_penstock_steadystate(pressure_gain, penstock_diameter, penstock
         end
 
         % Solve for q
+        % Loss factor needs to minus 
         q_squared = ((penstock_area^2)/((C_f*penstock_length)+(add_loss_factor/(2*density))))*(pressure_gain);
 
         if q_squared > 0
