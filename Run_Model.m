@@ -60,6 +60,7 @@ fluid_h_inPen = 0.75.*penstock_diameter_1;
 
 % Friction Factor override leave empty if no override wanted
 friction_factor = 0;
+friction_factor = 2.978;
 
 %% Turbine
 % Inlet Guide Vane Angle
@@ -120,8 +121,8 @@ max_l_res_vol = 2600;
 
 %% Pump
 % Power of Pump at base
-pump_power_start_1 = 1027000;
+pump_power_start_1 = 2000000;
 
 %% Run Sim
-sim_output = sim("PHES_Model_v1.slx");
+% sim_output = sim("PHES_Model_v1.slx");
 
